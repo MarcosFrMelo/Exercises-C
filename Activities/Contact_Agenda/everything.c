@@ -5,12 +5,12 @@
 
 #define green "\033[0;32m"
 #define red "\033[0;31m"
-#define reset "\033[0m"
+#define reset "\x1b[0m"
 
 typedef struct
 {
     char nome[50];
-    char telefone[20];
+    int telefone[20];
     char email[50];
 } pessoa;
 
@@ -26,6 +26,9 @@ void buscarContato(agenda agendas);
 void excluirContato(agenda *agendas);
 void editarContato(agenda *agendas);
 void listarContatos(agenda agendas);
+void Nome(agenda *agendas, int i);
+void Telefone(agenda *agendas, int i);
+void Email(agenda *agendas, int i);
 
 int main()
 {
@@ -54,10 +57,13 @@ int main()
             listarContatos(agendas);
             break;
         case 6:
-            printf(green "Finalizando programa", reset);
+            printf(green "Finalizando programa");
+            printf(reset);
             return;
         default:
-            printf(red "Opcao invalida!\n", reset);
+            printf(red "Opcao invalida!\n");
+            printf(reset);
+            system("pause");
             break;
         }
     }
@@ -74,11 +80,15 @@ void printarMensagem(agenda agendas, int i)
 void cadastrarContato(agenda *agendas)
 {
     int i, j;
+    int teste;
+    printf("teste");
+    scanf("%d", &teste);
+
     for (i = agendas->quantidade; i < 100; i++)
     {
-        Nome(&(*agendas), i);
-        Telefone(&(*agendas), i);
-        Email(&(*agendas), i);
+        Nome(&agendas, i);
+        Telefone(&agendas, i);
+        Email(&agendas, i);
         agendas->quantidade++;
 
         printf("Deseja cadastrar outro contato?\n1 - Sim\n2 - Nao\n");
@@ -116,6 +126,7 @@ void buscarContato(agenda agendas)
     if (contatoEncontrado == false)
     {
         printf(red "Contato nao encontrado!\n", reset);
+        system("pause");
     }
 }
 
@@ -191,18 +202,18 @@ void editarContato(agenda *agendas)
                 switch (opcao2)
                 {
                 case 1:
-                    Nome(*agendas, i);
+                    Nome(&agendas, i);
                     break;
                 case 2:
-                    Telefone(*agendas, i);
+                    Telefone(&agendas, i);
                     break;
                 case 3:
-                    Email(*agendas, i);
+                    Email(&agendas, i);
                     break;
                 case 4:
-                    Nome(*agendas, i);
-                    Telefone(*agendas, i);
-                    Email(*agendas, i);
+                    Nome(&agendas, i);
+                    Telefone(&agendas, i);
+                    Email(&agendas, i);
                     break;
                 }
             }
@@ -256,18 +267,18 @@ void Nome(agenda *agendas, int i)
     printf(green "Nome editado com sucesso!\n", reset);
 }
 
-void Telefone(agenda agendas, int i)
+void Telefone(agenda *agendas, int i)
 {
     int j;
     bool numeroValido = false;
     do
     {
         printf("Insira o telefone do contato: ");
-        fgets(agendas.contato[i].telefone, 20, stdin);
-        agendas.contato[i].telefone[strcspn(agendas.contato[i].telefone, "\n")] = '\0';
+        fgets(agendas->contato[i].telefone, 20, stdin);
+        agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
         for (j = 0; j < 20; j++)
         {
-            if (!isdigit(agendas.contato[i].telefone[j]))
+            if (!isdigit(agendas->contato[i].telefone[j]))
             {
                 numeroValido = false;
                 printf(red "Numero invalido!\n", reset);
@@ -280,11 +291,11 @@ void Telefone(agenda agendas, int i)
     printf(green "Telefone editado com sucesso!\n", reset);
 }
 
-void Email(agenda agendas, int i)
+void Email(agenda *agendas, int i)
 {
     printf("Insira o email do contato: ");
-    fgets(agendas.contato[i].email, 50, stdin);
-    agendas.contato[i].email[strcspn(agendas.contato[i].email, "\n")] = '\0';
+    fgets(agendas->contato[i].email, 50, stdin);
+    agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
 
     printf(green "Email editado com sucesso!\n", reset);
 }
