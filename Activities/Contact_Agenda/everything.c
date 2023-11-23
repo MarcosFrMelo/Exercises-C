@@ -76,9 +76,9 @@ void cadastrarContato(agenda *agendas)
     int i, j;
     for (i = agendas->quantidade; i < 100; i++)
     {
-        Nome(*agendas, i);
-        Telefone(*agendas, i);
-        Email(*agendas, i);
+        Nome(&(*agendas), i);
+        Telefone(&(*agendas), i);
+        Email(&(*agendas), i);
         agendas->quantidade++;
 
         printf("Deseja cadastrar outro contato?\n1 - Sim\n2 - Nao\n");
