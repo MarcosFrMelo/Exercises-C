@@ -10,7 +10,7 @@
 typedef struct
 {
     char nome[50];
-    int telefone[20];
+    char telefone[20];
     char email[50];
 } pessoa;
 
@@ -33,6 +33,7 @@ void Email(agenda *agendas, int i);
 int main()
 {
     agenda agendas;
+    agendas.quantidade = 0;
     int opcao;
     while (1)
     {
@@ -42,6 +43,7 @@ int main()
         switch (opcao)
         {
         case 1:
+            printf("%d", opcao);
             cadastrarContato(&agendas);
             break;
         case 2:
@@ -81,11 +83,10 @@ void cadastrarContato(agenda *agendas)
 {
     int i, j;
     int teste;
-    printf("teste");
-    scanf("%d", &teste);
 
     for (i = agendas->quantidade; i < 100; i++)
     {
+        while ((getchar()) != '\n');
         Nome(&agendas, i);
         Telefone(&agendas, i);
         Email(&agendas, i);
@@ -106,6 +107,8 @@ void buscarContato(agenda agendas)
     char nome[50];
     int i;
     bool contatoEncontrado = true;
+    
+    while ((getchar()) != '\n'); // Limpa o buffer de entrada
     printf("Insira o nome do contato que deseja buscar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -136,7 +139,8 @@ void excluirContato(agenda *agendas)
     int i, j;
     int opcao;
     bool contatoEncontrado = true;
-
+    
+    while ((getchar()) != '\n');
     printf("Insira o nome do contato que deseja excluir: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -182,7 +186,8 @@ void editarContato(agenda *agendas)
     int i;
     int opcao, opcao2;
     bool contatoEncontrado = false;
-
+    
+    while ((getchar()) != '\n');
     printf("Insira o nome do contato que deseja editar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -249,6 +254,7 @@ void Nome(agenda *agendas, int i)
     bool nomeValido;
     do
     {
+        while ((getchar()) != '\n');
         printf("Insira o nome do contato: ");
         fgets(agendas->contato[i].nome, 50, stdin);
         agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
@@ -273,6 +279,7 @@ void Telefone(agenda *agendas, int i)
     bool numeroValido = false;
     do
     {
+        while ((getchar()) != '\n');
         printf("Insira o telefone do contato: ");
         fgets(agendas->contato[i].telefone, 20, stdin);
         agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
@@ -293,6 +300,7 @@ void Telefone(agenda *agendas, int i)
 
 void Email(agenda *agendas, int i)
 {
+    while ((getchar()) != '\n');
     printf("Insira o email do contato: ");
     fgets(agendas->contato[i].email, 50, stdin);
     agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
