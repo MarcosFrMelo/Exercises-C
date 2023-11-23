@@ -12,56 +12,68 @@ int menu()
     return op;
 }
 
-void cadastrarContato(contato *pessoa)
+void cadastrarContato(agenda *agendas)
 {
-    pessoa[100];
     int i;
-    bool numero_valido = false;
-    printf("Insira -1 no nome do contado para sair\n");
-    for (i = 0; i < count; i++)
+    for (i = agendas->quantidade; i < 100; i++)
     {
-        printf("Digite o nome do contato: ");
-        fgets(pessoa[i].nome, 50, stdin);
-        pessoa[i].nome[strcspn(pessoa[i].nome, "\n")] = '\0';
-        if (strcmp(pessoa[i].nome, "-1") == 0)
+        printf("Insira o nome do contato: ");
+        fgets(agendas->contato[i].nome, 50, stdin);
+        agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
+
+        if (agendas->contato[i].nome == -1)
         {
-            break;
+            return;
         }
+
         do
         {
-            printf("Digite o telefone do contato: ");
-            fgets(pessoa[i].telefone, 20, stdin);
-            pessoa[i].telefone[strcspn(pessoa[i].telefone, "\n")] = '\0';
+            printf("Insira o telefone do contato: ");
+            fgets(agendas->contato[i].telefone, 20, stdin);
+            agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
 
-            if (isdigit(pessoa[i].telefone) == 0)
+            if (isdigit(agendas->contato[i].telefone) == false)
             {
-                printf(red "Digite apenas numeros no telefone!\n" reset);
-                numero_valido = true;
-                break;
+                printf("Insira apenas numeros\n");
             }
-        } while (numero_valido == true);
 
-        printf("Digite o email do contato: ");
-        fgets(pessoa[i].email, 50, stdin);
-        pessoa[i].email[strcspn(pessoa[i].email, "\n")] = '\0';
+        } while (isdigit(agendas->contato[i].telefone) == false);
 
+        printf("Insira o email do contato: ");
+        fgets(agendas->contato[i].email, 50, stdin);
+        agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
+
+        agendas->quantidade++;
         printf(green "Contato cadastrado com sucesso!\n", reset);
     }
 }
 
-void buscarContato(contato pessoa)
+void buscarContato(agenda pessoa)
 {
-    pessoa[100];
-    int i;
     char nome[50];
-    printf("Digite o nome do contato que deseja buscar: ");
+    int i;
+    bool contatoEncontrado = false;
+    printf("Insira o nome do contato que deseja buscar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
-    for (i = 0; i < count; i++)
+
+    for (i = 0; i < pessoa.quantidade; i++)
     {
-        if (strcmp(pessoa[i].nome, nome) == 0)
+        if (nome == pessoa.contato[i].nome)
         {
-            printf("Nome: %s\nTelefone: %s\nEmail: %s\n", pessoa[i].nome, pessoa[i].telefone, pessoa[i].email);
+            printf("------------------------------------------------------------\n");
+            printf(green "Nome: %s\nTelefone: %s\nEmail: %s\n", pessoa.contato[i].nome, pessoa.contato[i].telefone, pessoa.contato[i].email, reset);
+            printf("------------------------------------------------------------\n");
+            system("pause");
+            return;
         }
+        else
+        {
+            contatoEncontrado = false;
+        }
+    }
+    if (contatoEncontrado == false)
+    {
+        printf(red "Contato nao encontrado!\n", reset);
     }
 }

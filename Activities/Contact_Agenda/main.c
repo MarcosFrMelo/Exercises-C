@@ -11,26 +11,26 @@ Listar todos os contatos da agenda. */
 
 int main()
 {
-    contato contatos[100];
+    agenda agendas;
     do
     {
 
         switch (menu())
         {
         case 1:
-            cadastrarContato(&contatos);
+            cadastrarContato(&agendas);
             break;
         case 2:
-            buscarContato(contatos);
+            buscarContato(agendas);
             break;
         case 3:
-            excluirContato(&contatos);
+            excluirContato(&agendas);
             break;
         case 4:
-            editarContato(&contatos);
+            editarContato(&agendas);
             break;
         case 5:
-            listarContatos(&contatos);
+            listarContatos(&agendas);
             break;
         case 6:
             break;
