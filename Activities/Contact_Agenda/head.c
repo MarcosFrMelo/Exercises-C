@@ -4,6 +4,23 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define green "\033[0;32m"
+#define red "\033[0;31m"
+#define reset "\033[0m"
+
+typedef struct 
+{
+    char nome[50];
+    char telefone[20];
+    char email[50];
+} pessoa;
+
+typedef struct
+{
+    pessoa contato[100];
+    int quantidade;
+} agenda;
+
 int menu()
 {
     int op;

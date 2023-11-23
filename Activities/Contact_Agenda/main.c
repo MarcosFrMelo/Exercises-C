@@ -9,13 +9,32 @@ Listar todos os contatos da agenda. */
 #include <stdio.h>
 #include "head.h"
 
+#define green "\033[0;32m"
+#define red "\033[0;31m
+#define reset "\033[0m"
+
+typedef struct 
+{
+    char nome[50];
+    char telefone[20];
+    char email[50];
+} pessoa;
+
+typedef struct
+{
+    pessoa contato[100];
+    int quantidade;
+} agenda;
+
 int main()
 {
     agenda agendas;
-    do
+    while (1)
     {
         system("cls");
-        switch (menu())
+        int resultado;
+        resultado = menu();
+        switch (resultado)
         {
         case 1:
             cadastrarContato(&agendas);
@@ -33,10 +52,11 @@ int main()
             listarContatos(agendas);
             break;
         case 6:
-            break;
+            printf(green "Finalizando programa", reset);
+            return;
         default:
             break;
         }
 
-    } while (menu() != 6);
+    }
 }
