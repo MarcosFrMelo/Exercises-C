@@ -7,7 +7,7 @@
 #define red "\033[0;31m"
 #define reset "\033[0m"
 
-typedef struct 
+typedef struct
 {
     char nome[50];
     char telefone[20];
@@ -27,17 +27,16 @@ void excluirContato(agenda *agendas);
 void editarContato(agenda *agendas);
 void listarContatos(agenda agendas);
 
-
 int main()
 {
     agenda agendas;
-    
+    int opcao;
     while (1)
     {
         system("cls");
-        int resultado;
-        resultado = menu();
-        switch (resultado)
+        printf("Insira a opcao desejada:\n1 - Adicionar contatos\n2 - Buscar contatos\n3 - Excluir contatos\n4 - Editar contatos\n5 - Listar contatos\n6 - Sair\n");
+        scanf("%d", &opcao);
+        switch (opcao)
         {
         case 1:
             cadastrarContato(&agendas);
@@ -58,73 +57,45 @@ int main()
             printf(green "Finalizando programa", reset);
             return;
         default:
+            printf(red "Opcao invalida!\n", reset);
             break;
         }
-
-    }
-}
-
-int menu()
-{
-    int op;
-    printf("1 - Cadastrar contato\n2 - Buscar contato\n3 - Excluir contato\n4 - Editar contato\n5 - Listar contatos\n6 - Sair\n");
-    scanf("%d", &op);
-    return op;
-}
-
-void cadastrarContato(agenda *agendas)
-{
-    int i, j;
-    bool numeroValido = false;
-    for (i = agendas->quantidade; i < 100; i++)
-    {
-        printf("Insira o nome do contato: ");
-        fgets(agendas->contato[i].nome, 50, stdin);
-        agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
-
-        if (agendas->contato[i].nome == "-1")
-        {
-            return;
-        }
-
-        do
-        {
-            printf("Insira o telefone do contato: ");
-            fgets(agendas->contato[i].telefone, 20, stdin);
-            agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
-            for (j = 0; j < 20; j++)
-            {
-                if (!isdigit(agendas->contato[i].telefone[j]))
-                {
-                    numeroValido = false;
-                    printf(red "Numero invalido!\n", reset);
-                    break;
-                }
-                numeroValido = true;
-            }
-        } while (numeroValido == false);
-
-        printf("Insira o email do contato: ");
-        fgets(agendas->contato[i].email, 50, stdin);
-        agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
-
-        agendas->quantidade++;
-        printf(green "Contato cadastrado com sucesso!\n", reset);
     }
 }
 
 void printarMensagem(agenda agendas, int i)
 {
     printf("------------------------------------------------------------\n");
+    printf("Contato %d:\n", i + 1);
     printf(green "Nome: %s\nTelefone: %s\nEmail: %s\n", agendas.contato[i].nome, agendas.contato[i].telefone, agendas.contato[i].email, reset);
     printf("------------------------------------------------------------\n");
+}
+
+void cadastrarContato(agenda *agendas)
+{
+    int i, j;
+    for (i = agendas->quantidade; i < 100; i++)
+    {
+        Nome(*agendas, i);
+        Telefone(*agendas, i);
+        Email(*agendas, i);
+        agendas->quantidade++;
+
+        printf("Deseja cadastrar outro contato?\n1 - Sim\n2 - Nao\n");
+        scanf("%d", &j);
+
+        if (j == 2)
+        {
+            return;
+        }
+    }
 }
 
 void buscarContato(agenda agendas)
 {
     char nome[50];
     int i;
-    bool contatoEncontrado = false;
+    bool contatoEncontrado = true;
     printf("Insira o nome do contato que deseja buscar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -153,7 +124,7 @@ void excluirContato(agenda *agendas)
     char nome[50];
     int i, j;
     int opcao;
-    bool contatoEncontrado = false;
+    bool contatoEncontrado = true;
 
     printf("Insira o nome do contato que deseja excluir: ");
     fgets(nome, 50, stdin);
@@ -198,7 +169,7 @@ void editarContato(agenda *agendas)
 {
     char nome[50];
     int i;
-    int opcao;
+    int opcao, opcao2;
     bool contatoEncontrado = false;
 
     printf("Insira o nome do contato que deseja editar: ");
@@ -216,6 +187,24 @@ void editarContato(agenda *agendas)
             if (opcao == 1)
             {
                 printf("O que deseja editar?\n1 - Nome\n2 - Telefone\n3 - Email\n4 - Tudo\n");
+                scanf("%d", &opcao2);
+                switch (opcao2)
+                {
+                case 1:
+                    Nome(*agendas, i);
+                    break;
+                case 2:
+                    Telefone(*agendas, i);
+                    break;
+                case 3:
+                    Email(*agendas, i);
+                    break;
+                case 4:
+                    Nome(*agendas, i);
+                    Telefone(*agendas, i);
+                    Email(*agendas, i);
+                    break;
+                }
             }
             else
             {
@@ -241,4 +230,61 @@ void listarContatos(agenda agendas)
         printarMensagem(agendas, i);
     }
     system("pause");
+}
+
+void Nome(agenda *agendas, int i)
+{
+    int j;
+    bool nomeValido;
+    do
+    {
+        printf("Insira o nome do contato: ");
+        fgets(agendas->contato[i].nome, 50, stdin);
+        agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
+        nomeValido = true;
+        for (j = 0; j < 50; i++)
+        {
+            if (!isalpha(agendas->contato[i].nome[j]) == false)
+            {
+                printf(red "Nome invalido!\n", reset);
+                nomeValido = false;
+                break;
+            }
+        }
+    } while (nomeValido == false);
+
+    printf(green "Nome editado com sucesso!\n", reset);
+}
+
+void Telefone(agenda agendas, int i)
+{
+    int j;
+    bool numeroValido = false;
+    do
+    {
+        printf("Insira o telefone do contato: ");
+        fgets(agendas.contato[i].telefone, 20, stdin);
+        agendas.contato[i].telefone[strcspn(agendas.contato[i].telefone, "\n")] = '\0';
+        for (j = 0; j < 20; j++)
+        {
+            if (!isdigit(agendas.contato[i].telefone[j]))
+            {
+                numeroValido = false;
+                printf(red "Numero invalido!\n", reset);
+                break;
+            }
+            numeroValido = true;
+        }
+    } while (numeroValido == false);
+
+    printf(green "Telefone editado com sucesso!\n", reset);
+}
+
+void Email(agenda agendas, int i)
+{
+    printf("Insira o email do contato: ");
+    fgets(agendas.contato[i].email, 50, stdin);
+    agendas.contato[i].email[strcspn(agendas.contato[i].email, "\n")] = '\0';
+
+    printf(green "Email editado com sucesso!\n", reset);
 }
