@@ -172,3 +172,13 @@ void editarContato(agenda *agendas)
         printf(red "Contato nao encontrado!\n", reset);
     }
 }
+
+void listarContatos(agenda agendas)
+{
+    int i;
+    for (i = 0; i < agendas.quantidade; i++)
+    {
+        printarMensagem(agendas, i);
+    }
+    system("pause");
+}

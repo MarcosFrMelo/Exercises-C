@@ -14,7 +14,7 @@ int main()
     agenda agendas;
     do
     {
-
+        system("cls");
         switch (menu())
         {
         case 1:
@@ -30,7 +30,7 @@ int main()
             editarContato(&agendas);
             break;
         case 5:
-            listarContatos(&agendas);
+            listarContatos(agendas);
             break;
         case 6:
             break;

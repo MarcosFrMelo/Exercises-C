@@ -21,4 +21,4 @@ void cadastrarContato(agenda *agendas);
 void buscarContato(agenda agendas);
 void excluirContato(agenda *agendas);
 void editarContato(agenda *agendas);
-void listarContatos(agenda *agendas);
+void listarContatos(agenda agendas);
