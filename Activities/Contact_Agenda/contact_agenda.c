@@ -191,6 +191,7 @@ void excluirContato(agenda *agendas)
                 printf(green "Contato excluido com sucesso!\n");
                 printf(reset);
                 system("pause");
+                salvarDados(agendas);
                 return;
             }
             else
