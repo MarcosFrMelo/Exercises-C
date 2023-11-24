@@ -10,7 +10,7 @@
 typedef struct
 {
     char nome[50];
-    long int telefone[20];
+    long int telefone;
     char email[100];
 } pessoa;
 
@@ -20,7 +20,6 @@ typedef struct
     int quantidade;
 } agenda;
 
-int menu();
 void cadastrarContato(agenda *agendas);
 void buscarContato(agenda agendas);
 void excluirContato(agenda *agendas);
@@ -42,6 +41,7 @@ int main()
         system("cls");
         printf("Insira a opcao desejada:\n1 - Adicionar contatos\n2 - Buscar contatos\n3 - Excluir contatos\n4 - Editar contatos\n5 - Listar contatos\n6 - Sair\n7 - Salvar\n8 - Carregar\n");
         scanf("%d", &opcao);
+
         switch (opcao)
         {
         case 1:
@@ -118,7 +118,7 @@ void buscarContato(agenda agendas)
 
     if (agendas.quantidade == 0)
     {
-        printf(red "Nao ha contatos cadastrados!\n", reset);
+        printf(red "Nao ha contatos cadastrados!\n");
         printf(reset);
         system("pause");
         return;
@@ -146,7 +146,7 @@ void buscarContato(agenda agendas)
 
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
         printf(reset);
         system("pause");
     }
@@ -161,7 +161,7 @@ void excluirContato(agenda *agendas)
 
     if (agendas->quantidade == 0)
     {
-        printf(red "Nao ha contatos cadastrados!\n", reset);
+        printf(red "Nao ha contatos cadastrados!\n");
         printf(reset);
         system("pause");
         return;
@@ -220,7 +220,7 @@ void editarContato(agenda *agendas)
 
     if (agendas->quantidade == 0)
     {
-        printf(red "Nao ha contatos cadastrados!\n");
+        printf(red "Nao ha contatos cadastrados\n");
         printf(reset);
         system("pause");
         return;
@@ -234,6 +234,7 @@ void editarContato(agenda *agendas)
 
     for (i = 0; i < agendas->quantidade; i++)
     {
+
         if (strcmp(nome, agendas->contato[i].nome) == 0)
         {
             contatoEncontrado = true;

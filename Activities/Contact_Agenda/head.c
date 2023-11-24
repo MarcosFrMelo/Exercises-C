@@ -8,11 +8,11 @@
 #define red "\033[0;31m"
 #define reset "\033[0m"
 
-typedef struct 
+typedef struct
 {
     char nome[50];
-    char telefone[20];
-    char email[50];
+    long int telefone[20];
+    char email[100];
 } pessoa;
 
 typedef struct
