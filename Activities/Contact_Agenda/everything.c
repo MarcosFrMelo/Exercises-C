@@ -360,3 +360,28 @@ void carregarDados(agenda *agendas)
     printf(reset);
     system("pause");
 }
+
+void salvarDados(agenda *agendas)
+{
+    FILE *arq;
+    int i;
+
+    arq = fopen("agenda.bin", "wb");
+    if (arq == NULL)
+    {
+        printf(red "Erro ao abrir o arquivo!\n", reset);
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    fwrite(&agendas->quantidade, sizeof(int), 1, arq);
+    for (i = 0; i < agendas->quantidade; i++)
+    {
+        fwrite(&agendas->contato[i], sizeof(pessoa), 1, arq);
+    }
+    fclose(arq);
+    printf(green "Dados salvos com sucesso!\n", reset);
+    printf(reset);
+    system("pause");
+}
