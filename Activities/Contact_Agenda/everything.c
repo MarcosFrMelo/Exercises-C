@@ -188,7 +188,8 @@ void excluirContato(agenda *agendas)
                     agendas->contato[j] = agendas->contato[j + 1];
                 }
                 agendas->quantidade--;
-                printf(green "Contato excluido com sucesso!\n", reset);
+                printf(green "Contato excluido com sucesso!\n");
+                printf(reset);
                 system("pause");
                 return;
             }
@@ -204,7 +205,7 @@ void excluirContato(agenda *agendas)
     }
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
         printf(reset);
         system("pause");
     }
