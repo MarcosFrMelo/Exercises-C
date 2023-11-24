@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "head.h"
 #include <string.h>
 #include <stdbool.h>
 
@@ -11,7 +10,7 @@
 typedef struct
 {
     char nome[50];
-    long int telefone[20];
+    long int telefone;
     char email[100];
 } pessoa;
 
@@ -21,76 +20,63 @@ typedef struct
     int quantidade;
 } agenda;
 
-int menu()
+void printarMensagem(agenda agendas, int i)
 {
-    int op;
-    printf("1 - Cadastrar contato\n2 - Buscar contato\n3 - Excluir contato\n4 - Editar contato\n5 - Listar contatos\n6 - Sair\n");
-    scanf("%d", &op);
-    return op;
+    printf("------------------------------------------------------------\n");
+    printf("Contato %d:\n", i + 1);
+    printf(green "Nome: %s\nTelefone: %ld\nEmail: %s\n", agendas.contato[i].nome, agendas.contato[i].telefone, agendas.contato[i].email);
+    printf(reset);
+    printf("------------------------------------------------------------\n");
 }
 
 void cadastrarContato(agenda *agendas)
 {
     int i, j;
-    bool numeroValido = false;
+
     for (i = agendas->quantidade; i < 100; i++)
     {
-        printf("Insira o nome do contato: ");
-        fgets(agendas->contato[i].nome, 50, stdin);
-        agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
+        while ((getchar()) != '\n')
+            ;
+        Nome(agendas, i);
+        Telefone(agendas, i);
+        Email(agendas, i);
 
-        if (agendas->contato[i].nome == -1)
+        agendas->quantidade += 1;
+        printf("Deseja cadastrar outro contato?\n1 - Sim\n2 - Nao\n");
+        scanf("%d", &j);
+
+        if (j == 2)
         {
             return;
         }
-
-        do
-        {
-            printf("Insira o telefone do contato: ");
-            fgets(agendas->contato[i].telefone, 20, stdin);
-            agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
-            for (j = 0; j < 20; j++)
-            {
-                if (!isdigit(agendas->contato[i].telefone[j]))
-                {
-                    numeroValido = false;
-                    printf(red "Numero invalido!\n", reset);
-                    break;
-                }
-                numeroValido = true;
-            }
-        } while (numeroValido == false);
-
-        printf("Insira o email do contato: ");
-        fgets(agendas->contato[i].email, 50, stdin);
-        agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
-
-        agendas->quantidade++;
-        printf(green "Contato cadastrado com sucesso!\n", reset);
     }
 }
 
-void printarMensagem(agenda agendas, int i)
-{
-    printf("------------------------------------------------------------\n");
-    printf(green "Nome: %s\nTelefone: %s\nEmail: %s\n", agendas.contato[i].nome, agendas.contato[i].telefone, agendas.contato[i].email, reset);
-    printf("------------------------------------------------------------\n");
-}
-
-void buscarContato(agenda pessoa)
+void buscarContato(agenda agendas)
 {
     char nome[50];
     int i;
-    bool contatoEncontrado = false;
+    bool contatoEncontrado = true;
+
+    if (agendas.quantidade == 0)
+    {
+        printf(red "Nao ha contatos cadastrados!\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    while ((getchar()) != '\n')
+        ;
     printf("Insira o nome do contato que deseja buscar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
 
-    for (i = 0; i < pessoa.quantidade; i++)
+    for (i = 0; i < agendas.quantidade; i++)
     {
-        if (nome == pessoa.contato[i].nome)
+        if (strcmp(nome, agendas.contato[i].nome) == 0)
         {
-            printarMensagem(pessoa, i);
+            printarMensagem(agendas, i);
             system("pause");
             return;
         }
@@ -99,9 +85,12 @@ void buscarContato(agenda pessoa)
             contatoEncontrado = false;
         }
     }
+
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
+        printf(reset);
+        system("pause");
     }
 }
 
@@ -110,15 +99,25 @@ void excluirContato(agenda *agendas)
     char nome[50];
     int i, j;
     int opcao;
-    bool contatoEncontrado = false;
+    bool contatoEncontrado = true;
 
+    if (agendas->quantidade == 0)
+    {
+        printf(red "Nao ha contatos cadastrados!\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    while ((getchar()) != '\n')
+        ;
     printf("Insira o nome do contato que deseja excluir: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
 
     for (i = 0; i < agendas->quantidade; i++)
     {
-        if (nome == agendas->contato[i].nome)
+        if (strcmp(nome, agendas->contato[i].nome) == 0)
         {
             printarMensagem(*agendas, i);
             printf("Deseja realmente excluir este contato?\n1 - Sim\n2 - Nao\n");
@@ -131,7 +130,8 @@ void excluirContato(agenda *agendas)
                     agendas->contato[j] = agendas->contato[j + 1];
                 }
                 agendas->quantidade--;
-                printf(green "Contato excluido com sucesso!\n", reset);
+                printf(green "Contato excluido com sucesso!\n");
+                printf(reset);
                 system("pause");
                 return;
             }
@@ -147,32 +147,71 @@ void excluirContato(agenda *agendas)
     }
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
+        printf(reset);
+        system("pause");
     }
 }
 
 void editarContato(agenda *agendas)
 {
     char nome[50];
-    int i, j;
-    int opcao;
-    bool contatoEncontrado = false;
+    int i;
+    int opcao, opcao2;
+    bool contatoEncontrado = true;
 
+    if (agendas->quantidade == 0)
+    {
+        printf(red "Nao ha contatos cadastrados\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    while ((getchar()) != '\n')
+        ;
     printf("Insira o nome do contato que deseja editar: ");
     fgets(nome, 50, stdin);
     nome[strcspn(nome, "\n")] = '\0';
 
     for (i = 0; i < agendas->quantidade; i++)
     {
-        if (nome == agendas->contato[i].nome)
+
+        if (strcmp(nome, agendas->contato[i].nome) == 0)
         {
+            contatoEncontrado = true;
             printarMensagem(*agendas, i);
             printf("Deseja realmente editar este contato?\n1 - Sim\n2 - Nao\n");
             scanf("%d", &opcao);
 
             if (opcao == 1)
             {
-                printf("O que deseja editar?\n1 - Nome\n2 - Telefone\n3 - Email\n4 - Tudo\n");
+                printf("O que deseja editar?\n1 - Nome\n2 - Telefone\n3 - Email\n4 - Tudo\n5 - Sair\n");
+                scanf("%d", &opcao2);
+                switch (opcao2)
+                {
+                case 1:
+                    Nome(agendas, i);
+                    break;
+                case 2:
+                    Telefone(agendas, i);
+                    break;
+                case 3:
+                    Email(agendas, i);
+                    break;
+                case 4:
+                    Nome(agendas, i);
+                    Telefone(agendas, i);
+                    Email(agendas, i);
+                    break;
+                case 5:
+                    return;
+                default:
+                    printf(red "Opcao invalida!\n");
+                    printf(reset);
+                    system("pause");
+                    break;
+                }
             }
             else
             {
@@ -186,16 +225,115 @@ void editarContato(agenda *agendas)
     }
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
+        printf(reset);
+        system("pause");
     }
 }
 
 void listarContatos(agenda agendas)
 {
     int i;
+    if (agendas.quantidade == 0)
+    {
+        printf(red "Nao ha contatos cadastrados!\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
     for (i = 0; i < agendas.quantidade; i++)
     {
         printarMensagem(agendas, i);
     }
+    system("pause");
+}
+
+void Nome(agenda *agendas, int i)
+{
+    while ((getchar()) != '\n')
+        ;
+    printf("Insira o nome do contato: ");
+    fgets(agendas->contato[i].nome, 50, stdin);
+    agendas->contato[i].nome[strcspn(agendas->contato[i].nome, "\n")] = '\0';
+}
+
+void Telefone(agenda *agendas, int i)
+{
+    bool telefoneValido = true;
+    do
+    {
+        printf("Insira o telefone do contato: ");
+        scanf("%ld", &agendas->contato[i].telefone);
+
+        if (isdigit(agendas->contato[i].telefone))
+        {
+            printf(red "Telefone invalido!\n");
+            printf(reset);
+            telefoneValido = false;
+            system("pause");
+        }
+
+    } while (telefoneValido == false);
+}
+
+void Email(agenda *agendas, int i)
+{
+    while ((getchar()) != '\n')
+        ;
+    printf("Insira o email do contato: ");
+    fgets(agendas->contato[i].email, 100, stdin);
+    agendas->contato[i].email[strcspn(agendas->contato[i].email, "\n")] = '\0';
+
+    return;
+}
+
+void carregarDados(agenda *agendas)
+{
+    FILE *arq;
+    int i;
+
+    arq = fopen("agenda.bin", "rb");
+    if (arq == NULL)
+    {
+        printf(red "Erro ao abrir o arquivo!\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    fread(&agendas->quantidade, sizeof(int), 1, arq);
+    for (i = 0; i < agendas->quantidade; i++)
+    {
+        fread(&agendas->contato[i], sizeof(pessoa), 1, arq);
+    }
+    fclose(arq);
+    printf(green "Dados carregados com sucesso!\n");
+    printf(reset);
+    system("pause");
+}
+
+void salvarDados(agenda *agendas)
+{
+    FILE *arq;
+    int i;
+
+    arq = fopen("agenda.bin", "wb");
+    if (arq == NULL)
+    {
+        printf(red "Erro ao abrir o arquivo!\n");
+        printf(reset);
+        system("pause");
+        return;
+    }
+
+    fwrite(&agendas->quantidade, sizeof(int), 1, arq);
+    for (i = 0; i < agendas->quantidade; i++)
+    {
+        fwrite(&agendas->contato[i], sizeof(pessoa), 1, arq);
+    }
+    fclose(arq);
+    printf(green "Dados salvos com sucesso!\n");
+    printf(reset);
     system("pause");
 }
