@@ -10,7 +10,7 @@
 typedef struct
 {
     char nome[50];
-    long telefone[20];
+    long int telefone[20];
     char email[100];
 } pessoa;
 
@@ -317,8 +317,21 @@ void Nome(agenda *agendas, int i)
 
 void Telefone(agenda *agendas, int i)
 {
-    printf("Insira o telefone do contato: ");
-    scanf("%ld", &agendas->contato[i].telefone);
+    bool telefoneValido = true;
+    do
+    {
+        printf("Insira o telefone do contato: ");
+        scanf("%ld", &agendas->contato[i].telefone);
+
+        if (isdigit(agendas->contato[i].telefone))
+        {
+            printf(red "Telefone invalido!\n");
+            printf(reset);
+            telefoneValido = false;
+            system("pause");
+        }
+
+    } while (telefoneValido == false);
 }
 
 void Email(agenda *agendas, int i)
