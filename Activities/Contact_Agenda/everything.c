@@ -216,11 +216,11 @@ void editarContato(agenda *agendas)
     char nome[50];
     int i;
     int opcao, opcao2;
-    bool contatoEncontrado = false;
+    bool contatoEncontrado = true;
 
     if (agendas->quantidade == 0)
     {
-        printf(red "Nao ha contatos cadastrados!\n", reset);
+        printf(red "Nao ha contatos cadastrados!\n");
         printf(reset);
         system("pause");
         return;
@@ -264,7 +264,7 @@ void editarContato(agenda *agendas)
                 case 5:
                     return;
                 default:
-                    printf(red "Opcao invalida!\n", reset);
+                    printf(red "Opcao invalida!\n");
                     printf(reset);
                     system("pause");
                     break;
@@ -282,7 +282,7 @@ void editarContato(agenda *agendas)
     }
     if (contatoEncontrado == false)
     {
-        printf(red "Contato nao encontrado!\n", reset);
+        printf(red "Contato nao encontrado!\n");
         printf(reset);
         system("pause");
     }
@@ -293,7 +293,7 @@ void listarContatos(agenda agendas)
     int i;
     if (agendas.quantidade == 0)
     {
-        printf(red "Nao ha contatos cadastrados!\n", reset);
+        printf(red "Nao ha contatos cadastrados!\n");
         printf(reset);
         system("pause");
         return;
@@ -308,8 +308,6 @@ void listarContatos(agenda agendas)
 
 void Nome(agenda *agendas, int i)
 {
-    int j;
-
     while ((getchar()) != '\n')
         ;
     printf("Insira o nome do contato: ");
@@ -319,11 +317,8 @@ void Nome(agenda *agendas, int i)
 
 void Telefone(agenda *agendas, int i)
 {
-    int j;
-
     printf("Insira o telefone do contato: ");
-    scanf("%d", &agendas->contato[i].telefone);
-    agendas->contato[i].telefone[strcspn(agendas->contato[i].telefone, "\n")] = '\0';
+    scanf("%ld", &agendas->contato[i].telefone);
 }
 
 void Email(agenda *agendas, int i)
@@ -345,7 +340,7 @@ void carregarDados(agenda *agendas)
     arq = fopen("agenda.bin", "rb");
     if (arq == NULL)
     {
-        printf(red "Erro ao abrir o arquivo!\n", reset);
+        printf(red "Erro ao abrir o arquivo!\n");
         printf(reset);
         system("pause");
         return;
@@ -357,7 +352,7 @@ void carregarDados(agenda *agendas)
         fread(&agendas->contato[i], sizeof(pessoa), 1, arq);
     }
     fclose(arq);
-    printf(green "Dados carregados com sucesso!\n", reset);
+    printf(green "Dados carregados com sucesso!\n");
     printf(reset);
     system("pause");
 }
@@ -370,7 +365,7 @@ void salvarDados(agenda *agendas)
     arq = fopen("agenda.bin", "wb");
     if (arq == NULL)
     {
-        printf(red "Erro ao abrir o arquivo!\n", reset);
+        printf(red "Erro ao abrir o arquivo!\n");
         printf(reset);
         system("pause");
         return;
@@ -382,7 +377,7 @@ void salvarDados(agenda *agendas)
         fwrite(&agendas->contato[i], sizeof(pessoa), 1, arq);
     }
     fclose(arq);
-    printf(green "Dados salvos com sucesso!\n", reset);
+    printf(green "Dados salvos com sucesso!\n");
     printf(reset);
     system("pause");
 }
