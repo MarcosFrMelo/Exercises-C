@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "head.h"
 
 #define green "\033[0;32m"
 #define red "\033[0;31m"
@@ -133,6 +134,7 @@ void excluirContato(agenda *agendas)
                 printf(green "Contato excluido com sucesso!\n");
                 printf(reset);
                 system("pause");
+                salvarDados(agendas);
                 return;
             }
             else
