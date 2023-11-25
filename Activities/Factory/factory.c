@@ -43,7 +43,7 @@ void tipo(cliente *clientes, int i, int j);
 void quantidade(cliente *clientes, int i, int j);
 void localidade(cliente *clientes, int i, int j);
 void carregarDados(cliente *clientes);
-void salvarDados(cliente *clientes);
+void salvarDados(cliente *clientes, int i, int j);
 void calcularFrete(cliente clientes[]);
 int peso(cliente clientes[], int i, int j);
 
@@ -74,11 +74,7 @@ int main()
         case 5:
             return 0;
         case 6:
-            salvarDados(&clientes);
-            break;
-        case 7:
-            carregarDados(&clientes);
-            break;
+           
         case 8:
             calcularFrete(clientes);
             return 0;
@@ -167,7 +163,6 @@ void relatorioCliente(cliente clientes[])
 
 void relatorioGeral(cliente clientes)
 {
-
 }
 
 void editar(cliente *clientes)
@@ -247,11 +242,10 @@ void tipo(cliente *clientes, int i, int j)
 
 void quantidade(cliente *clientes, int i, int j)
 {
-    do
-    {
-        printf("Insira a quantidade de pacotes\n");
-        scanf("%d", &clientes[i].pedidos[j].quantidade);
-    } while (clientes[i].pedidos[j].quantidade < 1 || clientes[i].pedidos[j].quantidade > 10);
+
+    printf("Insira a quantidade de pacotes\n");
+    scanf("%d", &clientes[i].pedidos[j].quantidade);
+
     clientes[i].quantidadeGeral += clientes[i].pedidos[j].quantidade;
 }
 
@@ -262,7 +256,7 @@ void localidade(cliente *clientes, int i, int j)
         printf("Insira a localidade da entrega\n1 - Palmas\n2 - Porto Nacional\n");
         scanf("%d", &clientes[i].pedidos[j].localidade);
 
-    } while (clientes[i].pedidos[j].localidade < 1 || clientes[i].pedidos[j].localidade > 2);
+    } while (clientes[i].pedidos[j].localidade != 1 && clientes[i].pedidos[j].localidade != 2);
 }
 
 void carregarDados(cliente *clientes)
@@ -282,7 +276,7 @@ void carregarDados(cliente *clientes)
     fclose(arquivo);
 }
 
-void salvarDados(cliente *clientes)
+void salvarDados(cliente *clientes, int i, int j)
 {
     FILE *arquivo;
     arquivo = fopen("dados.txt", "w");
@@ -291,12 +285,7 @@ void salvarDados(cliente *clientes)
         printf("Erro ao abrir o arquivo\n");
         return;
     }
-    int i;
-    for (i = 0; i < 2; i++)
-    {
-        fwrite(&clientes[i], sizeof(cliente), 1, arquivo);
-    }
-    fclose(arquivo);
+    fwrite(&clientes[i].pedidos[j], sizeof(cliente), 1, arquivo);
 }
 
 void calcularFrete(cliente clientes[])
@@ -305,12 +294,12 @@ void calcularFrete(cliente clientes[])
     int j;
     printf("insira o numero do cliente\n");
     scanf("%d", &i);
-    
+
     printf("insira o numero do pedido\n");
     scanf("%d", &j);
     int resultado;
     resultado = peso(clientes, i, j);
-    
+
     if (resultado < 1000)
     {
         printf("Frete gratis\n");
@@ -334,13 +323,14 @@ void calcularFrete(cliente clientes[])
 
 int peso(cliente clientes[], int i, int j)
 {
-    if (clientes[i].pedidos[j].tipo == 1) return clientes[i].pedidos[j].quantidade * 20;
+    if (clientes[i].pedidos[j].tipo == 1)
+        return clientes[i].pedidos[j].quantidade * 20;
 
-    else if (clientes[i].pedidos[j].tipo == 2) return clientes[i].pedidos[j].quantidade * 20;
-   
-    else if (clientes[i].pedidos[j].tipo == 3) return clientes[i].pedidos[j].quantidade * 5;
-    
+    else if (clientes[i].pedidos[j].tipo == 2)
+        return clientes[i].pedidos[j].quantidade * 20;
+
+    else if (clientes[i].pedidos[j].tipo == 3)
+        return clientes[i].pedidos[j].quantidade * 5;
+
     return 0;
 }
-
-
