@@ -31,18 +31,18 @@ void cadastrarAlunos(turma *turmas);
 void consultaAlunos(turma turmas[]);
 void consultaTurma(turma turmas[]);
 void printarMensagem(turma *turmas, int numTurma, int numAluno);
-void salvarDados(turma *turmas);
-void carregarDados(turma *turmas);
-void modificarAluno(turma *turmas);
+void modificarTurma(turma *turmas);
 void deletarTurma(turma *turmas);
 void nomeAluno(turma *turmas, int numTurma, int numAluno);
 void notaAluno(turma *turmas, int numTurma, int numAluno);
 void faltaAluno(turma *turmas, int numTurma, int numAluno);
 void verificacaoTurma(turma *turmas, int numTurma);
+void salvarDados(turma *turmas);
+void carregarDados(turma *turmas);
 
 int main()
 {
-    turma turmas[3];
+    turma turmas[3] = {0};
     int opcao, i;
 
     while (1)
@@ -63,7 +63,7 @@ int main()
             consultaTurma(turmas);
             break;
         case 4:
-            modificarAluno(&turmas);
+            modificarTurma(&turmas);
             break;
         case 5:
             deletarTurma(&turmas);
@@ -153,17 +153,17 @@ void notaAluno(turma *turmas, int numTurma, int numAluno)
         }
 
         turmas[numTurma].alunos[numAluno].mediaFinal += turmas[numTurma].alunos[numAluno].notaSemestral[i];
-        turmas[numTurma].mediaTurma += turmas[numTurma].alunos[numAluno].notaSemestral[i];
     }
 
     turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal /= 2;
+    turmas[numTurma - 1].mediaTurma += turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal;
 
     if (turmas[numTurma].alunos[numAluno].mediaFinal > 8)
     {
         turmas[numTurma].mediaAcima8++;
     }
 
-    if (turmas[numTurma].alunos[numAluno].mediaFinal > 5 && turmas[numTurma].alunos[numAluno].mediaFinal < 7)
+    if (turmas[numTurma].alunos[numAluno].mediaFinal >= 5 && turmas[numTurma].alunos[numAluno].mediaFinal < 7)
     {
         turmas[numTurma].provaSubsti++;
     }
@@ -250,7 +250,7 @@ void printarMensagem(turma *turmas, int numTurma, int numAluno)
     }
 }
 
-void modificarAluno(turma *turmas)
+void modificarTurma(turma *turmas)
 {
     int numTurma, numAluno, opcao, opcao2;
 
@@ -312,7 +312,7 @@ void deletarTurma(turma *turmas)
         scanf("%d", &numTurma);
 
         printf("--------------------------------------------");
-        printf("--------------------------------------------");
+        printf("\tTurma %d\n", numTurma);
         printf("Quantidade de alunos: %d\nQuantidade de alunos com media acima de 8: %d\nQuantidade de alunos com nota 0: %d\n"
                "Quantidade de alunos que farao prova substitutiva: %d\nMedia de notas da turma: %2.f\n",
                turmas[numTurma - 1].contadorAluno,
@@ -322,8 +322,11 @@ void deletarTurma(turma *turmas)
                turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno);
         printf("--------------------------------------------");
 
-        turmas[numTurma - 1] = turmas[numTurma];
-    
+        for (int i = numTurma - 1; i < 2; i++)
+        {
+            turmas[i] = turmas[i + 1];
+        }
+          
         printf(green "Turma deletada com sucesso\n" reset);
         system("pause");
         return;
