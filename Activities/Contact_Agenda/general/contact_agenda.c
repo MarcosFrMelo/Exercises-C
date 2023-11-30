@@ -95,6 +95,7 @@ void cadastrarContato(agenda *agendas)
     {
         while ((getchar()) != '\n')
             ;
+
         Nome(agendas, i);
         Telefone(agendas, i);
         Email(agendas, i);
