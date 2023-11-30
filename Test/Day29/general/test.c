@@ -157,7 +157,7 @@ void notaAluno(turma *turmas, int numTurma, int numAluno)
     }
 
     turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal /= 2;
-    
+
     if (turmas[numTurma].alunos[numAluno].mediaFinal > 8)
     {
         turmas[numTurma].mediaAcima8++;
@@ -213,11 +213,13 @@ void consultaTurma(turma turmas[])
     scanf("%d", &numTurma);
 
     printf("--------------------------------------------");
-    printf("Quantidade de alunos: %d\n", turmas[numTurma - 1].contadorAluno);
-    printf("Quantidade de alunos com media acima de 8: %d\n", turmas[numTurma - 1].mediaAcima8);
-    printf("Quantidade de alunos com nota 0: %d\n", turmas[numTurma - 1].nota0);
-    printf("Quantidade de alunos que farao prova substitutiva: %d\n", turmas[numTurma - 1].provaSubsti);
-    printf("Media de notas da turma: %2.f\n", turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno);
+    printf("Quantidade de alunos: %d\nQuantidade de alunos com media acima de 8: %d\nQuantidade de alunos com nota 0: %d\n"
+           "Quantidade de alunos que farao prova substitutiva: %d\nMedia de notas da turma: %2.f\n",
+           turmas[numTurma - 1].contadorAluno,
+           turmas[numTurma - 1].mediaAcima8,
+           turmas[numTurma - 1].nota0,
+           turmas[numTurma - 1].provaSubsti,
+           turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno);
     printf("--------------------------------------------");
 
     system("pause");
@@ -304,9 +306,31 @@ void deletarTurma(turma *turmas)
     printf("Deseja deletar a turma ou um aluno?\n1 - Turma\n2 - Aluno\n");
     scanf("%d", &opcao);
 
+    if (opcao == 1)
+    {
+        printf("Insira o numero da turma que deseja deletar:\n");
+        scanf("%d", &numTurma);
+
+        printf("--------------------------------------------");
+        printf("--------------------------------------------");
+        printf("Quantidade de alunos: %d\nQuantidade de alunos com media acima de 8: %d\nQuantidade de alunos com nota 0: %d\n"
+               "Quantidade de alunos que farao prova substitutiva: %d\nMedia de notas da turma: %2.f\n",
+               turmas[numTurma - 1].contadorAluno,
+               turmas[numTurma - 1].mediaAcima8,
+               turmas[numTurma - 1].nota0,
+               turmas[numTurma - 1].provaSubsti,
+               turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno);
+        printf("--------------------------------------------");
+
+        turmas[numTurma - 1] = turmas[numTurma];
+    
+        printf(green "Turma deletada com sucesso\n" reset);
+        system("pause");
+        return;
+    }
+
     printf("Insira o numero da turma que deseja deletar:\n");
     scanf("%d", &numTurma);
-
 }
 
 void salvarDados(turma *turmas)
