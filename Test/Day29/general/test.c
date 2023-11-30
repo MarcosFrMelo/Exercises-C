@@ -297,6 +297,18 @@ void modificarAluno(turma *turmas)
     return;
 }
 
+void deletarTurma(turma *turmas)
+{
+    int numTurma, opcao;
+
+    printf("Deseja deletar a turma ou um aluno?\n1 - Turma\n2 - Aluno\n");
+    scanf("%d", &opcao);
+
+    printf("Insira o numero da turma que deseja deletar:\n");
+    scanf("%d", &numTurma);
+
+}
+
 void salvarDados(turma *turmas)
 {
     FILE *arquivo;
