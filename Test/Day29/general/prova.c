@@ -60,6 +60,7 @@ int main()
             fgets(turmas[i].alunos[j].name, 40, stdin);
             turmas[i].alunos[j].name[strcspn(turmas[i].alunos[j].name, "\n")] = '\0';
 
+            notaZero = false;
             for (k = 0; k < 2; k++)
             {
                 printf("Insira a nota %d do aluno:\n", k + 1);
@@ -73,6 +74,7 @@ int main()
                 }
             }
             turmas[i].alunos[j].mediaFinal /= 2;
+            turmas[i].mediaTurma += turmas[i].alunos[j].mediaFinal;
 
             printf("Insira a quantidade de faltas do aluno:\n");
             scanf("%d", &turmas[i].alunos[j].falta);
@@ -179,7 +181,7 @@ void consultarTurma(turma turmas[])
                turmas[numTurma - 1].mediaAcima8,
                turmas[numTurma - 1].nota0,
                turmas[numTurma - 1].provaSubsti,
-               turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno);
+               turmas[numTurma - 1].mediaTurma);
     printf("---------------------------------------------\n");
 }
 
@@ -201,7 +203,7 @@ void printarMensagem(turma *turmas, int numTurma, int numAluno)
         }
         else
         {
-            printf("Fara Substitutiva");
+            printf("Fara Substitutiva\n");
         }
     }
     return;
