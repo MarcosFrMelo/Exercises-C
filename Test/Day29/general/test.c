@@ -27,25 +27,26 @@ typedef struct
 #define reset "\033[0m"
 #define yellow "\033[0;33m"
 
-void cadastrarAlunos(turma *turmas);
+void cadastrarAlunos(turma turmas[]);
 void nomeAluno(turma *turmas, int numTurma, int numAluno);
 void notaAluno(turma *turmas, int numTurma, int numAluno);
 void faltaAluno(turma *turmas, int numTurma, int numAluno);
 void consultaAlunos(turma turmas[]);
 void consultaTurma(turma turmas[]);
 void printarMensagem(turma *turmas, int numTurma, int numAluno);
-void modificarTurma(turma *turmas);
-void deletarTurma(turma *turmas);
-void salvarDados(turma *turmas);
-void carregarDados(turma *turmas);
+void modificarTurma(turma turmas[]);
+void deletarTurma(turma turmas[]);
+void salvarDados(turma turmas[]);
+void carregarDados(turma turmas[]);
 void verificacaoTurma(turma *turmas, int numTurma);
 void apagarAlgumacoisa(turma *turmas, int numTurma);
 void printarAlunos(turma *turmas, int numTurma, int numAluno);
 void printarTurma(turma *turmas, int numTurma);
+void mostrarTurma(turma turmas[]);
 
 int main()
 {
-    turma turmas[3] = {0};
+    turma turmas[3] = (turma){0};
     int opcao, i;
 
     while (1)
@@ -76,6 +77,7 @@ int main()
             break;
         case 7:
             carregarDados(&turmas);
+
             break;
         case 8:
             mostrarTurma(turmas);
@@ -84,7 +86,7 @@ int main()
             printf(red "Finalizando Programa");
             for (i = 0; i < 4; i++)
             {
-                prinft(".");
+                printf(".");
                 Sleep(1300);
             }
             return 0;
@@ -95,7 +97,7 @@ int main()
     }
 }
 
-void cadastrarAlunos(turma *turmas)
+void cadastrarAlunos(turma turmas[])
 {
     int i, j, op;
 
@@ -146,7 +148,6 @@ void nomeAluno(turma *turmas, int numTurma, int numAluno)
 void notaAluno(turma *turmas, int numTurma, int numAluno)
 {
     int i;
-    bool notaZero = false;
     for (i = 0; i < 2; i++)
     {
         do
@@ -223,7 +224,7 @@ void printarMensagem(turma *turmas, int numTurma, int numAluno)
     }
 }
 
-void modificarTurma(turma *turmas)
+void modificarTurma(turma turmas[])
 {
     int numTurma, numAluno, opcao;
 
@@ -269,7 +270,7 @@ void modificarTurma(turma *turmas)
     return;
 }
 
-void deletarTurma(turma *turmas)
+void deletarTurma(turma turmas[])
 {
     int numTurma, numAluno, i, op, opcao;
 
@@ -320,7 +321,7 @@ void deletarTurma(turma *turmas)
     return;
 }
 
-void salvarDados(turma *turmas)
+void salvarDados(turma turmas[])
 {
     FILE *arquivo;
     int i, j;
@@ -349,7 +350,7 @@ void salvarDados(turma *turmas)
     return;
 }
 
-void carregarDados(turma *turmas)
+void carregarDados(turma turmas[])
 {
     FILE *arquivo;
     int i, j;
