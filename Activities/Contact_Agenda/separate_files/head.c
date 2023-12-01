@@ -1,4 +1,8 @@
 #include "head.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define green "\033[0;32m"
 #define red "\033[0;31m"

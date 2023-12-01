@@ -46,7 +46,7 @@ void mostrarTurma(turma turmas[]);
 
 int main()
 {
-    turma turmas[3] = (turma){0};
+    turma turmas[3] = {0};
     int opcao, i;
 
     while (1)
@@ -77,7 +77,6 @@ int main()
             break;
         case 7:
             carregarDados(&turmas);
-
             break;
         case 8:
             mostrarTurma(turmas);
@@ -99,7 +98,7 @@ int main()
 
 void cadastrarAlunos(turma turmas[])
 {
-    int i, j, op;
+    int i, j, op, op2;
 
     for (i = 0; i < 3; i++)
     {
@@ -114,13 +113,15 @@ void cadastrarAlunos(turma turmas[])
 
         for (j = turmas[i].contadorAluno; j < 30; j++)
         {
-            printf("\n\tAluno %d\n", j);
+            printf("\n\tAluno %d\n", j + 1);
 
             nomeAluno(turmas, i, j);
             notaAluno(turmas, i, j);
             faltaAluno(turmas, i, j);
 
             turmas[i].contadorAluno++;
+
+            printf("contador: %d\n", turmas[i].contadorAluno);
 
             printf(green "Deseja cadastrar outro aluno?\n1 - Sim\n2 - Nao\n" reset);
             scanf("%d", &op);
@@ -130,7 +131,15 @@ void cadastrarAlunos(turma turmas[])
                 break;
             }
         }
-        verificacaoTurma(turmas, i);
+        verificacaoTurma(turmas, i+1);
+        
+        printf(green "Deseja cadastrar mais turmas?\n1 - Sim\n2 - Nao\n" reset);
+        scanf("%d", &op2);
+
+        if (op2 == 2)
+        {
+            break;
+        }
     }
     return;
 }
@@ -139,9 +148,9 @@ void nomeAluno(turma *turmas, int numTurma, int numAluno)
 {
     while (getchar() != '\n')
         ;
-    printf("Insira o nome do aluno %d da turma %d: ", numAluno, numTurma);
-    fgets(turmas[numTurma - 1].alunos[numAluno - 1].name, 40, stdin);
-    turmas[numTurma - 1].alunos[numAluno - 1].name[strcspn(turmas[numTurma - 1].alunos[numAluno - 1].name, "\n")] = '\0';
+    printf("Insira o nome do aluno:\n");
+    fgets(turmas[numTurma].alunos[numAluno].name, 40, stdin);
+    turmas[numTurma].alunos[numAluno].name[strcspn(turmas[numTurma].alunos[numAluno].name, "\n")] = '\0';
     return;
 }
 
@@ -152,7 +161,7 @@ void notaAluno(turma *turmas, int numTurma, int numAluno)
     {
         do
         {
-            printf("Insira a primeira nota do aluno:\n");
+            printf("Insira a nota %d do aluno:\n", i + 1);
             scanf("%f", &turmas[numTurma].alunos[numAluno].notaSemestral[i]);
 
             if (turmas[numTurma].alunos[numAluno].notaSemestral[i] < 0 || turmas[numTurma].alunos[numAluno].notaSemestral[i] > 10)
@@ -166,7 +175,7 @@ void notaAluno(turma *turmas, int numTurma, int numAluno)
 
 void faltaAluno(turma *turmas, int numTurma, int numAluno)
 {
-    printf("Insira a quantidade de faltas do aluno:\n");
+    printf("Insira a falta do aluno:\n");
     scanf("%d", &turmas[numTurma].alunos[numAluno].falta);
 
     return;
@@ -179,10 +188,17 @@ void consultaAlunos(turma turmas[])
     printf("Insira o numero da turma que deseja consultar:\n");
     scanf("%d", &numTurma);
 
+    if (turmas[numTurma - 1].contadorAluno == 0)
+    {
+        printf(red "Turma vazia\n" reset);
+        system("pause");
+        return;
+    }
+
     printf("Insira o numero do aluno que deseja consultar:\n");
     scanf("%d", &numAluno);
 
-    printarAlunos(turmas, numTurma, numAluno);
+    printarAlunos(turmas, numTurma-1, numAluno-1);
     system("pause");
     return;
 }
@@ -194,7 +210,7 @@ void consultaTurma(turma turmas[])
     printf("Insira o numero da turma que deseja consultar:\n");
     scanf("%d", &numTurma);
 
-    printarTurma(turmas, numTurma);
+    printarTurma(turmas, numTurma-1);
 
     system("pause");
 
@@ -203,17 +219,17 @@ void consultaTurma(turma turmas[])
 
 void printarMensagem(turma *turmas, int numTurma, int numAluno)
 {
-    if (turmas[numTurma - 1].alunos[numAluno - 1].falta > 10)
+    if (turmas[numTurma].alunos[numAluno].falta > 10)
     {
         printf(red "Reprovado por falta\n" reset);
     }
     else
     {
-        if (turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal < 5)
+        if (turmas[numTurma].alunos[numAluno].mediaFinal < 5)
         {
             printf(red "Reprovado por nota\n" reset);
         }
-        else if (turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal > 7)
+        else if (turmas[numTurma].alunos[numAluno].mediaFinal > 7)
         {
             printf(green "Aprovado\n" reset);
         }
@@ -231,10 +247,17 @@ void modificarTurma(turma turmas[])
     printf("Insira o numero da turma que deseja modificar:\n");
     scanf("%d", &numTurma);
 
+    if (turmas[numTurma - 1].contadorAluno == 0)
+    {
+        printf(red "Turma vazia\n" reset);
+        system("pause");
+        return;
+    }
+
     printf("Insira o numero do aluno que deseja modificar:\n");
     scanf("%d", &numAluno);
 
-    printarAlunos(turmas, numTurma, numAluno);
+    printarAlunos(turmas, numTurma-1, numAluno-1);
 
     printf("Esse e o aluno que deseja modificar?\n1 - Sim\n2 - Nao\n");
     scanf("%d", &opcao);
@@ -250,13 +273,13 @@ void modificarTurma(turma turmas[])
     switch (opcao)
     {
     case 1:
-        nomeAluno(turmas, numTurma, numAluno);
+        nomeAluno(turmas, numTurma-1, numAluno-1);
         break;
     case 2:
-        notaAluno(turmas, numTurma, numAluno);
+        notaAluno(turmas, numTurma-1, numAluno-1);
         break;
     case 3:
-        faltaAluno(turmas, numTurma, numAluno);
+        faltaAluno(turmas, numTurma-1, numAluno-1);
         break;
     case 4:
         printf("Saindo\n");
@@ -282,7 +305,15 @@ void deletarTurma(turma turmas[])
         printf("Insira o numero da turma que deseja deletar:\n");
         scanf("%d", &numTurma);
 
-        printarTurma(turmas, numTurma);
+        printarTurma(turmas, numTurma-1);
+
+        printf("Esse e a turma que deseja deletar?\n1 - Sim\n2 - Nao\n");
+        scanf("%d", &op);
+
+        if (opcao == 2)
+        {
+            return;
+        }
 
         for (i = numTurma - 1; i < 2; i++)
         {
@@ -300,7 +331,7 @@ void deletarTurma(turma turmas[])
     printf("Insira o numero do aluno que deseja deletar:\n");
     scanf("%d", &numAluno);
 
-    printarAlunos(turmas, numTurma, numAluno);
+    printarAlunos(turmas, numTurma-1, numAluno-1);
 
     printf("Esse e o aluno que deseja deletar?\n1 - Sim\n2 - Nao\n");
     scanf("%d", &op);
@@ -324,7 +355,7 @@ void deletarTurma(turma turmas[])
 void salvarDados(turma turmas[])
 {
     FILE *arquivo;
-    int i, j;
+    int i;
 
     arquivo = fopen("class.bin", "wb");
 
@@ -337,11 +368,6 @@ void salvarDados(turma turmas[])
     for (i = 0; i < 3; i++)
     {
         fwrite(&turmas[i], sizeof(turma), 1, arquivo);
-
-        for (j = 0; j < turmas[i].contadorAluno; j++)
-        {
-            fwrite(&turmas[i].alunos[j], sizeof(aluno), 1, arquivo);
-        }
     }
 
     printf(green "Dados salvos com sucesso\n" reset);
@@ -353,7 +379,7 @@ void salvarDados(turma turmas[])
 void carregarDados(turma turmas[])
 {
     FILE *arquivo;
-    int i, j;
+    int i;
 
     arquivo = fopen("class.bin", "rb");
 
@@ -366,11 +392,6 @@ void carregarDados(turma turmas[])
     for (i = 0; i < 3; i++)
     {
         fread(&turmas[i], sizeof(turma), 1, arquivo);
-
-        for (j = 0; j < turmas[i].contadorAluno; j++)
-        {
-            fread(&turmas[i].alunos[j], sizeof(aluno), 1, arquivo);
-        }
     }
 
     fclose(arquivo);
@@ -380,11 +401,12 @@ void carregarDados(turma turmas[])
 void verificacaoTurma(turma *turmas, int numTurma)
 {
     int i, j;
+    apagarAlgumacoisa(turmas, numTurma-1);
 
-    apagarAlgumacoisa(turmas, numTurma);
-
+    printf("contador: %d\n", turmas[numTurma-1].contadorAluno);
     for (i = 0; i < turmas[numTurma - 1].contadorAluno; i++)
     {
+
         if (turmas[numTurma].alunos[i].mediaFinal > 8)
         {
             turmas[numTurma].mediaAcima8++;
@@ -393,18 +415,24 @@ void verificacaoTurma(turma *turmas, int numTurma)
         {
             turmas[numTurma].provaSubsti++;
         }
+
         for (j = 0; j < 2; j++)
         {
+
             if (turmas[numTurma].alunos[i].notaSemestral[j] == 0)
             {
                 turmas[numTurma].nota0++;
             }
+
         }
 
         turmas[numTurma].alunos[i].mediaFinal += turmas[numTurma].alunos[i].notaSemestral[1] +
                                                  turmas[numTurma].alunos[i].notaSemestral[0];
-        turmas[numTurma].mediaTurma += turmas[numTurma].alunos[i].mediaFinal / turmas[numTurma].contadorAluno;
+        turmas[numTurma].mediaTurma += turmas[numTurma].alunos[i].mediaFinal / turmas[numTurma-1].contadorAluno;
+
     }
+
+    return;
 }
 
 void apagarAlgumacoisa(turma *turmas, int numTurma)
@@ -417,26 +445,27 @@ void apagarAlgumacoisa(turma *turmas, int numTurma)
 
 void printarAlunos(turma *turmas, int numTurma, int numAluno)
 {
-    printf("--------------------------------------------");
+    printf("--------------------------------------------\n");
+    printf("\tAluno %d\n", numAluno + 1);
     printf("Nome: %s\nNota 1: %2.f\nNota 2: %2.f\nMedia final: %2.f\nFalta: %d\n",
-           turmas[numTurma - 1].alunos[numAluno - 1].name, turmas[numTurma - 1].alunos[numAluno - 1].notaSemestral[0],
-           turmas[numTurma - 1].alunos[numAluno - 1].notaSemestral[1], turmas[numTurma - 1].alunos[numAluno - 1].mediaFinal,
-           turmas[numTurma - 1].alunos[numAluno - 1].falta);
-    printf("--------------------------------------------");
+           turmas[numTurma].alunos[numAluno].name, turmas[numTurma].alunos[numAluno].notaSemestral[0],
+           turmas[numTurma].alunos[numAluno].notaSemestral[1], turmas[numTurma].alunos[numAluno].mediaFinal,
+           turmas[numTurma].alunos[numAluno].falta);
+    printf("--------------------------------------------\n");
 }
 
 void printarTurma(turma *turmas, int numTurma)
 {
-    printf("--------------------------------------------");
+    printf("--------------------------------------------\n");
     printf("\tTurma %d\n", numTurma);
     printf("Quantidade de alunos: %d\nQuantidade de alunos com media acima de 8: %d\nQuantidade de alunos com nota 0: %d\n"
            "Quantidade de alunos que farao prova substitutiva: %d\nMedia de notas da turma: %2.f\n",
-           turmas[numTurma - 1].contadorAluno,
-           turmas[numTurma - 1].mediaAcima8,
-           turmas[numTurma - 1].nota0,
-           turmas[numTurma - 1].provaSubsti,
-           turmas[numTurma - 1].mediaTurma);
-    printf("--------------------------------------------");
+           turmas[numTurma].contadorAluno,
+           turmas[numTurma].mediaAcima8,
+           turmas[numTurma].nota0,
+           turmas[numTurma].provaSubsti,
+           turmas[numTurma].mediaTurma);
+    printf("--------------------------------------------\n");
 }
 
 void mostrarTurma(turma turmas[])
@@ -446,9 +475,9 @@ void mostrarTurma(turma turmas[])
     printf("Insira o numero da turma que deseja ver:\n");
     scanf("%d", &numTurma);
 
-    for (i = 0; i < turmas[numTurma].contadorAluno; i++)
+    for (i = 0; i < turmas[numTurma-1].contadorAluno; i++)
     {
-        printarAlunos(turmas, numTurma, i);
+        printarAlunos(turmas, numTurma-1, i);
     }
     system("pause");
     return;
