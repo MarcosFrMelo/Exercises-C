@@ -39,7 +39,6 @@ void deletarTurma(turma turmas[]);
 void salvarDados(turma turmas[]);
 void carregarDados(turma turmas[]);
 void verificacaoTurma(turma *turmas, int numTurma);
-void apagarAlgumacoisa(turma *turmas, int numTurma);
 void printarAlunos(turma *turmas, int numTurma, int numAluno);
 void printarTurma(turma *turmas, int numTurma);
 void mostrarTurma(turma turmas[]);
@@ -58,7 +57,7 @@ int main()
         switch (opcao)
         {
         case 1:
-            cadastrarAlunos(&turmas);
+            cadastrarAlunos(turmas);
             break;
         case 2:
             consultaAlunos(turmas);
@@ -67,16 +66,16 @@ int main()
             consultaTurma(turmas);
             break;
         case 4:
-            modificarTurma(&turmas);
+            modificarTurma(turmas);
             break;
         case 5:
-            deletarTurma(&turmas);
+            deletarTurma(turmas);
             break;
         case 6:
-            salvarDados(&turmas);
+            salvarDados(turmas);
             break;
         case 7:
-            carregarDados(&turmas);
+            carregarDados(turmas);
             break;
         case 8:
             mostrarTurma(turmas);
@@ -98,18 +97,27 @@ int main()
 
 void cadastrarAlunos(turma turmas[])
 {
-    int i, j, op, op2;
+    int i, j, op;
 
     for (i = 0; i < 3; i++)
     {
         printf("\n\tTurma %d\n", i + 1);
-
+        
         if (turmas[i].contadorAluno == 30)
         {
             printf(red "Turma cheia\n" reset);
             system("pause");
             continue;
         }
+        
+        printf("Deseja cadastrar alunos nessa turma?\n1 - Sim\n2 - Nao\n");
+        scanf("%d", &op);
+
+        if (op == 2)
+        {
+            continue;
+        }
+
 
         for (j = turmas[i].contadorAluno; j < 30; j++)
         {
@@ -120,8 +128,6 @@ void cadastrarAlunos(turma turmas[])
             faltaAluno(turmas, i, j);
 
             turmas[i].contadorAluno++;
-
-            printf("contador: %d\n", turmas[i].contadorAluno);
 
             printf(green "Deseja cadastrar outro aluno?\n1 - Sim\n2 - Nao\n" reset);
             scanf("%d", &op);
@@ -134,9 +140,9 @@ void cadastrarAlunos(turma turmas[])
         verificacaoTurma(turmas, i + 1);
 
         printf(green "Deseja cadastrar mais turmas?\n1 - Sim\n2 - Nao\n" reset);
-        scanf("%d", &op2);
+        scanf("%d", &op);
 
-        if (op2 == 2)
+        if (op == 2)
         {
             break;
         }
@@ -210,6 +216,13 @@ void consultaTurma(turma turmas[])
 
     printf("Insira o numero da turma que deseja consultar:\n");
     scanf("%d", &numTurma);
+
+    if (turmas[numTurma - 1].contadorAluno == 0)
+    {
+        printf(red "Turma vazia\n" reset);
+        system("pause");
+        return;
+    }
 
     printarTurma(turmas, numTurma - 1);
 
@@ -311,7 +324,7 @@ void deletarTurma(turma turmas[])
         printf("Esse e a turma que deseja deletar?\n1 - Sim\n2 - Nao\n");
         scanf("%d", &op);
 
-        if (opcao == 2)
+        if (op == 2)
         {
             return;
         }
@@ -338,13 +351,13 @@ void deletarTurma(turma turmas[])
         printf("Esse e o aluno que deseja deletar?\n1 - Sim\n2 - Nao\n");
         scanf("%d", &op);
 
-        if (opcao == 2)
+        if (op == 2)
         {
             return;
         }
         else
         {
-            for (i = opcao - 1; i < turmas[numTurma - 1].contadorAluno - 1; i++)
+            for (i = numAluno - 1; i < turmas[numTurma - 1].contadorAluno - 1; i++)
             {
                 turmas[numTurma - 1].alunos[i] = turmas[numTurma - 1].alunos[i + 1];
             }
@@ -376,6 +389,7 @@ void salvarDados(turma turmas[])
     }
 
     printf(green "Dados salvos com sucesso\n" reset);
+    system("pause");
 
     fclose(arquivo);
     return;
@@ -399,6 +413,9 @@ void carregarDados(turma turmas[])
         fread(&turmas[i], sizeof(turma), 1, arquivo);
     }
 
+    printf(green "Dados carregados com sucesso\n" reset);
+    system("pause");
+
     fclose(arquivo);
     return;
 }
@@ -406,11 +423,18 @@ void carregarDados(turma turmas[])
 void verificacaoTurma(turma *turmas, int numTurma)
 {
     int i, j;
-    apagarAlgumacoisa(turmas, numTurma - 1);
+    bool notaZero = false;
+    turmas[numTurma - 1].mediaAcima8 = 0;
+    turmas[numTurma - 1].nota0 = 0;
+    turmas[numTurma - 1].provaSubsti = 0;
+    turmas[numTurma - 1].mediaTurma = 0;
 
-    printf("contador: %d\n", turmas[numTurma - 1].contadorAluno);
     for (i = 0; i < turmas[numTurma - 1].contadorAluno; i++)
     {
+        turmas[numTurma - 1].alunos[i].mediaFinal += turmas[numTurma - 1].alunos[i].notaSemestral[1] +
+                                                     turmas[numTurma - 1].alunos[i].notaSemestral[0];
+        turmas[numTurma - 1].alunos[i].mediaFinal = turmas[numTurma - 1].alunos[i].mediaFinal / 2;
+        turmas[numTurma - 1].mediaTurma += turmas[numTurma - 1].alunos[i].mediaFinal;
         if (turmas[numTurma - 1].alunos[i].mediaFinal > 8)
         {
             turmas[numTurma - 1].mediaAcima8++;
@@ -424,24 +448,17 @@ void verificacaoTurma(turma *turmas, int numTurma)
         {
             if (turmas[numTurma - 1].alunos[i].notaSemestral[j] == 0)
             {
-                turmas[numTurma - 1].nota0++;
+                notaZero = true;
             }
         }
-        turmas[numTurma - 1].alunos[i].mediaFinal += turmas[numTurma - 1].alunos[i].notaSemestral[1] +
-                                                     turmas[numTurma - 1].alunos[i].notaSemestral[0];
-        turmas[numTurma - 1].mediaTurma += turmas[numTurma - 1].alunos[i].mediaFinal;
-        turmas[numTurma - 1].alunos[i].mediaFinal = turmas[numTurma - 1].alunos[i].mediaFinal / 2;
     }
     turmas[numTurma - 1].mediaTurma = turmas[numTurma - 1].mediaTurma / turmas[numTurma - 1].contadorAluno;
-    return;
-}
+    if (notaZero == true)
+    {
+        turmas[numTurma - 1].nota0++;
+    }
 
-void apagarAlgumacoisa(turma *turmas, int numTurma)
-{
-    turmas[numTurma].mediaAcima8 = 0;
-    turmas[numTurma].nota0 = 0;
-    turmas[numTurma].provaSubsti = 0;
-    turmas[numTurma].mediaTurma = 0;
+    return;
 }
 
 void printarAlunos(turma *turmas, int numTurma, int numAluno)
@@ -475,6 +492,13 @@ void mostrarTurma(turma turmas[])
 
     printf("Insira o numero da turma que deseja ver:\n");
     scanf("%d", &numTurma);
+
+    if (turmas[numTurma - 1].contadorAluno == 0)
+    {
+        printf(red "Turma vazia\n" reset);
+        system("pause");
+        return;
+    }
 
     for (i = 0; i < turmas[numTurma - 1].contadorAluno; i++)
     {
