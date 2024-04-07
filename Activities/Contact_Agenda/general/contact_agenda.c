@@ -10,7 +10,7 @@
 typedef struct
 {
     char nome[50];
-    long int telefone;
+    char telefone[15];
     char email[100];
 } pessoa;
 
@@ -62,7 +62,7 @@ int main()
         case 6:
             printf(green "Finalizando programa");
             printf(reset);
-            return;
+            exit(0);
         case 7:
             salvarDados(&agendas);
             break;
@@ -82,7 +82,7 @@ void printarMensagem(agenda agendas, int i)
 {
     printf("------------------------------------------------------------\n");
     printf("Contato %d:\n", i + 1);
-    printf(green "Nome: %s\nTelefone: %ld\nEmail: %s\n", agendas.contato[i].nome, agendas.contato[i].telefone, agendas.contato[i].email);
+    printf(green "Nome: %s\nTelefone: %s\nEmail: %s\n", agendas.contato[i].nome, agendas.contato[i].telefone, agendas.contato[i].email);
     printf(reset);
     printf("------------------------------------------------------------\n");
 }
@@ -324,15 +324,8 @@ void Telefone(agenda *agendas, int i)
     do
     {
         printf("Insira o telefone do contato: ");
-        scanf("%ld", &agendas->contato[i].telefone);
-
-        if (isdigit(agendas->contato[i].telefone))
-        {
-            printf(red "Telefone invalido!\n");
-            printf(reset);
-            telefoneValido = false;
-            system("pause");
-        }
+        fgets(agendas->contato[i].telefone, 15, stdin);
+        agendas->contato[i].telefone[strcspn(agendas->contato[i].nome, "\n")] = '\0';
 
     } while (telefoneValido == false);
 }
