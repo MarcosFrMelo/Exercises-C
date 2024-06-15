@@ -41,7 +41,7 @@ int main()
         system("cls");
         printf("Insira a opcao desejada:\n1 - Adicionar contatos\n2 - Buscar contatos\n3 - Excluir contatos\n4 - Editar contatos\n5 - Listar contatos\n6 - Sair\n7 - Salvar\n8 - Carregar\n");
         scanf("%d", &opcao);
-
+        printf("------------------------------------------------------------\n");
         switch (opcao)
         {
         case 1:
